@@ -553,6 +553,7 @@
                     const img = document.createElement('img');
                     img.src = `https://kabertpro.github.io/ReciclaLand/images/${imageName}`;
                     img.alt = imageName.replace('.jpg', '');
+                    img.setAttribute('data-type', category); // Añadir data-type a la imagen también
                     
                     item.appendChild(img);
                     itemsContainer.appendChild(item);
@@ -571,7 +572,11 @@
 
         // Funciones de arrastre
         function dragStart(e) {
-            e.dataTransfer.setData('text/plain', e.target.getAttribute('data-type'));
+            // Obtener el tipo del elemento arrastrado
+            const itemType = e.target.getAttribute('data-type') || 
+                           e.target.querySelector('img').getAttribute('data-type');
+            e.dataTransfer.setData('text/plain', itemType);
+            console.log('Arrastrando:', itemType); // Para debug
         }
 
         function dragOver(e) {
@@ -582,6 +587,8 @@
             e.preventDefault();
             const itemType = e.dataTransfer.getData('text/plain');
             const binType = e.currentTarget.getAttribute('data-type');
+            
+            console.log('Soltando:', itemType, 'en:', binType); // Para debug
             
             // Verificar si el elemento se colocó en el contenedor correcto
             if (itemType === binType) {
